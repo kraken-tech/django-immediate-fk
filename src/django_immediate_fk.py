@@ -1,5 +1,6 @@
 from django.db.backends.ddl_references import Columns, Statement, Table
 from django.db.models.constraints import BaseConstraint
+from django.db.utils import DEFAULT_DB_ALIAS
 
 
 class ImmediateDeferrableFKConstraint(BaseConstraint):
@@ -59,3 +60,7 @@ class ImmediateDeferrableFKConstraint(BaseConstraint):
         path, args, kwargs = super().deconstruct()
         kwargs["field"] = self.field
         return path, args, kwargs
+
+    def validate(self, model, instance, exclude=None, using=DEFAULT_DB_ALIAS):
+        # Delegate all validation to the `ForeignKey` referred to by `self.field`
+        return True
