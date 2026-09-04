@@ -1,0 +1,24 @@
+[build-system]
+requires = ["flit_core >=3.11,<5"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "django-immediate-fk"
+authors = [{name = "Lily", email = "code@lilyf.org"}]
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+version = "0.0.1"
+description = "Provides a custom Constraint class to support `DEFERRABLE INITIALLY IMMEDIATE` foreign keys in Django."
+
+dependencies = ["django"]
+
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-django",
+    "django-subatomic",
+]
+
+[tool.pytest]
+DJANGO_SETTINGS_MODULE = "tests.config.settings"
