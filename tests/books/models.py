@@ -19,9 +19,4 @@ class Book(models.Model):
 
 class Edition(models.Model):
     edition = models.CharField()
-    book = models.ForeignKey(Book, on_delete=models.DB_CASCADE, db_constraint=False)
-
-    class Meta:
-        constraints = [
-            ImmediateDeferrableFKConstraint(name="books_edition_book_immediate", field="book"),
-        ]
+    book = models.ForeignKey(Book, on_delete=models.DB_CASCADE)
