@@ -19,6 +19,8 @@ dev = [
     "pytest-django",
     "django-subatomic",
     "coverage",
+    "environs[django]",
+    "psycopg[binary]",
 ]
 
 [tool.pytest]
