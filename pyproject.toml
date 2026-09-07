@@ -29,6 +29,7 @@ DJANGO_SETTINGS_MODULE = "tests.config.settings"
 [tool.coverage.run]
 
 branch = true
+parallel = true
 
 [tool.coverage.report]
 
