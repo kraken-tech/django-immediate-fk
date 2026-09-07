@@ -18,7 +18,17 @@ dev = [
     "pytest",
     "pytest-django",
     "django-subatomic",
+    "coverage",
 ]
 
 [tool.pytest]
 DJANGO_SETTINGS_MODULE = "tests.config.settings"
+
+[tool.coverage.run]
+
+branch = true
+
+[tool.coverage.report]
+
+show_missing = true
+fail_under = 100
