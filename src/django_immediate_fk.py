@@ -11,6 +11,11 @@ class ImmediateDeferrableFKConstraint(BaseConstraint):
         self.field = field
         super().__init__(name=name)
 
+    def __eq__(self, other):
+        if not isinstance(other, ImmediateDeferrableFKConstraint):
+            return super().__eq__(other)
+        return self.name == other.name and self.field == other.field
+
     def constraint_sql(self, model, schema_editor):
         field = model._meta.get_field(self.field)
 

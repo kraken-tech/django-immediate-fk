@@ -1,9 +1,11 @@
 import pytest
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
+from django.db.models.constraints import UniqueConstraint
 from django_subatomic import db
 
 from .books.models import Author, Book
+from django_immediate_fk import ImmediateDeferrableFKConstraint
 
 
 @pytest.mark.django_db(transaction=True)
@@ -22,3 +24,11 @@ def test_immediate_foreign_key_full_clean():
     with db.transaction():
         with pytest.raises(ValidationError):
             hobbit.full_clean()
+
+
+def test_eq():
+    constraint = ImmediateDeferrableFKConstraint(name="name", field="author")
+    assert constraint == ImmediateDeferrableFKConstraint(name="name", field="author")
+    assert constraint != ImmediateDeferrableFKConstraint(name="other", field="author")
+    assert constraint != ImmediateDeferrableFKConstraint(name="name", field="other")
+    assert constraint != UniqueConstraint(name="name", fields=["author"])
