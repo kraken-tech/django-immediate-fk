@@ -9,3 +9,8 @@ coverage:
     coverage run -m pytest
     DATABASE_URL="postgres:///immediate-fk" coverage run -m pytest
     coverage report
+
+ci:
+    coverage run -m pytest
+    DATABASE_URL="postgres://postgres:postgres@localhost/immediate-fk" coverage run -m pytest
+    coverage report
