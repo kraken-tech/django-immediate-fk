@@ -18,7 +18,20 @@ dev = [
     "pytest",
     "pytest-django",
     "django-subatomic",
+    "coverage",
+    "environs[django]",
+    "psycopg[binary]",
 ]
 
 [tool.pytest]
 DJANGO_SETTINGS_MODULE = "tests.config.settings"
+
+[tool.coverage.run]
+
+branch = true
+parallel = true
+
+[tool.coverage.report]
+
+show_missing = true
+fail_under = 100
