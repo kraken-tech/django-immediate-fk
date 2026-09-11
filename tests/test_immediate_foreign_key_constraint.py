@@ -17,9 +17,7 @@ def test_immediate_foreign_key_integrity_error():
 
 @pytest.mark.django_db
 def test_immediate_foreign_key_full_clean():
-    tolkien = Author.objects.create(name="Tolkien")
-    hobbit = Book.objects.create(title="The Hobbit", author=tolkien)
-    hobbit.author_id = -1
+    hobbit = Book(title="The Hobbit", author_id=-1)
 
     with db.transaction():
         with pytest.raises(ValidationError):
