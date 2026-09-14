@@ -21,6 +21,7 @@ dev = [
     "coverage",
     "environs[django]",
     "psycopg[binary]",
+    "django-test-migrations",
 ]
 
 [tool.pytest]
