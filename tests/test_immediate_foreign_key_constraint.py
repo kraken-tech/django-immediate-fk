@@ -5,7 +5,7 @@ from django.db.models.constraints import UniqueConstraint
 from django_subatomic import db
 
 from .books.models import Book
-from django_immediate_fk import ImmediateDeferrableFKConstraint
+from django_immediate_fk import ForeignKeyConstraint
 
 
 @pytest.mark.django_db(transaction=True)
@@ -72,8 +72,8 @@ def test_immediate_foreign_key_full_clean():
 
 
 def test_eq():
-    constraint = ImmediateDeferrableFKConstraint(name="name", field="author")
-    assert constraint == ImmediateDeferrableFKConstraint(name="name", field="author")
-    assert constraint != ImmediateDeferrableFKConstraint(name="other", field="author")
-    assert constraint != ImmediateDeferrableFKConstraint(name="name", field="other")
+    constraint = ForeignKeyConstraint(name="name", field="author")
+    assert constraint == ForeignKeyConstraint(name="name", field="author")
+    assert constraint != ForeignKeyConstraint(name="other", field="author")
+    assert constraint != ForeignKeyConstraint(name="name", field="other")
     assert constraint != UniqueConstraint(name="name", fields=["author"])

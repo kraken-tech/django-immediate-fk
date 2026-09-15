@@ -1,6 +1,6 @@
 from django.db import models
 
-from django_immediate_fk import ImmediateDeferrableFKConstraint
+from django_immediate_fk import ForeignKeyConstraint
 
 
 class Author(models.Model):
@@ -13,5 +13,5 @@ class Book(models.Model):
 
     class Meta:
         constraints = [
-            ImmediateDeferrableFKConstraint(name="books_book_author_immediate", field="author"),
+            ForeignKeyConstraint(name="books_book_author_immediate", field="author"),
         ]

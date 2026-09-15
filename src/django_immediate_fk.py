@@ -3,7 +3,7 @@ from django.db.models.constraints import BaseConstraint
 from django.db.utils import DEFAULT_DB_ALIAS
 
 
-class ImmediateDeferrableFKConstraint(BaseConstraint):
+class ForeignKeyConstraint(BaseConstraint):
     CONSTRAINT_SQL = "FOREIGN KEY (%(column)s) REFERENCES %(to_table)s (%(to_column)s)%(on_delete_db)s DEFERRABLE INITIALLY IMMEDIATE"
     CREATE_SQL = f"ALTER TABLE %(table)s ADD CONSTRAINT %(name)s {CONSTRAINT_SQL}"
 
@@ -12,7 +12,7 @@ class ImmediateDeferrableFKConstraint(BaseConstraint):
         super().__init__(name=name)
 
     def __eq__(self, other):
-        if not isinstance(other, ImmediateDeferrableFKConstraint):
+        if not isinstance(other, ForeignKeyConstraint):
             return super().__eq__(other)
         return self.name == other.name and self.field == other.field
 

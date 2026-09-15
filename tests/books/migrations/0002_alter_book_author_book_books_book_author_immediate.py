@@ -19,6 +19,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AddConstraint(
             model_name='book',
-            constraint=django_immediate_fk.ImmediateDeferrableFKConstraint(field='author', name='books_book_author_immediate'),
+            constraint=django_immediate_fk.ForeignKeyConstraint(field='author', name='books_book_author_immediate'),
         ),
     ]
