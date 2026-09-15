@@ -20,11 +20,27 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Editor',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField()),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Publisher',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField()),
+            ],
+        ),
+        migrations.CreateModel(
             name='Book',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField()),
                 ('author', models.ForeignKey(on_delete=django.db.models.deletion.DB_CASCADE, to='books.author')),
+                ('editor', models.ForeignKey(on_delete=django.db.models.deletion.DB_CASCADE, to='books.editor')),
+                ('publisher', models.ForeignKey(on_delete=django.db.models.deletion.DB_CASCADE, to='books.publisher')),
             ],
         ),
     ]
