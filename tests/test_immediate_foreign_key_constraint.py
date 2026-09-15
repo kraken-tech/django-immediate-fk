@@ -77,3 +77,13 @@ def test_eq():
     assert constraint != ForeignKeyConstraint(name="other", field="author")
     assert constraint != ForeignKeyConstraint(name="name", field="other")
     assert constraint != UniqueConstraint(name="name", fields=["author"])
+
+
+def test_deconstruct():
+    constraint = ForeignKeyConstraint(name="name", field="author")
+
+    assert constraint.deconstruct() == (
+        "django_immediate_fk.ForeignKeyConstraint",
+        (),
+        {"name": "name", "field": "author"},
+    )
