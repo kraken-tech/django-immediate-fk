@@ -22,6 +22,7 @@ dev = [
     "environs[django]",
     "psycopg[binary]",
     "django-test-migrations",
+    "django-integrity",
 ]
 
 [tool.pytest]
