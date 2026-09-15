@@ -1,10 +1,13 @@
 import pytest
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
+from django.db import connection
 from django.db.models.constraints import Deferrable, UniqueConstraint
+from django.db.utils import ProgrammingError
 from django_subatomic import db
+from django_integrity.constraints import set_deferred, set_immediate
 
-from .books.models import Book, Editor, Publisher
+from .books.models import Author, Book, Editor, Publisher
 from django_immediate_fk import ForeignKeyConstraint
 
 
@@ -198,6 +201,67 @@ def test_deferred_constraint_reverse_migration(migrator):
     Book.objects.create(author_id=author.pk, editor_id=-1, publisher_id=publisher.pk)
     with pytest.raises(IntegrityError):
         transaction.__exit__(None, None, None)
+
+
+@pytest.mark.skipif(
+    connection.vendor == "sqlite",
+    reason="SET DEFERRED is not supported by SQLite: https://www.sqlite.org/foreignkeys.html#fk_unsupported",
+)
+@pytest.mark.django_db(transaction=True)
+def test_set_deferred_not_deferrable_foreign_key():
+    with db.transaction():
+        with pytest.raises(ProgrammingError):
+            set_deferred(names=("books_book_publisher_not_deferrable",), using="default")
+
+
+@pytest.mark.skipif(
+    connection.vendor == "sqlite",
+    reason="SET IMMEDIATE is not supported by SQLite: https://www.sqlite.org/foreignkeys.html#fk_unsupported",
+)
+@pytest.mark.django_db(transaction=True)
+def test_set_immediate_not_deferrable_foreign_key():
+    author = Author.objects.create(name="Author")
+    editor = Editor.objects.create(name="Editor")
+
+    with db.transaction():
+        set_immediate(names=("books_book_publisher_not_deferrable",), using="default")
+
+        with pytest.raises(IntegrityError):
+            Book.objects.create(author=author, editor=editor, publisher_id=-1)
+
+
+@pytest.mark.skipif(
+    connection.vendor == "sqlite",
+    reason="SET DEFERRED is not supported by SQLite: https://www.sqlite.org/foreignkeys.html#fk_unsupported",
+)
+@pytest.mark.django_db(transaction=True)
+def test_set_deferred_immediate_foreign_key():
+    editor = Editor.objects.create(name="Editor")
+    publisher = Publisher.objects.create(name="Publisher")
+
+    transaction = db.transaction()
+    transaction.__enter__()
+
+    set_deferred(names=("books_book_author_immediate",), using="default")
+    Book.objects.create(author_id=-1, editor=editor, publisher=publisher)
+
+    with pytest.raises(IntegrityError):
+        transaction.__exit__(None, None, None)
+
+
+@pytest.mark.skipif(
+    connection.vendor == "sqlite",
+    reason="SET IMMEDIATE is not supported by SQLite: https://www.sqlite.org/foreignkeys.html#fk_unsupported",
+)
+@pytest.mark.django_db(transaction=True)
+def test_set_immediate_deferrable_foreign_key():
+    author = Author.objects.create(name="Author")
+    publisher = Publisher.objects.create(name="Publisher")
+
+    with db.transaction():
+        set_immediate(names=("books_book_editor_deferred",), using="default")
+        with pytest.raises(IntegrityError):
+            Book.objects.create(author=author, editor_id=-1, publisher=publisher)
 
 
 @pytest.mark.django_db
